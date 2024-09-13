@@ -24,6 +24,7 @@ public class CartService {
         return cartRepository.findById(cartId)
                 .orElseThrow(() -> new NotFoundException("Cart not found"));
     }
+
     public Cart addItemToCart(Long cartId, Long itemId, Integer quantity) {
         Cart cart = findCartById(cartId);
         Item item = itemService.findById(itemId);
@@ -33,26 +34,23 @@ public class CartService {
 
         if (existingCartItem == null) {
             CartItem cartItem = CartItemBuilder.buildCartItem(cart, item, quantity);
-            if (!isQuantityIsInStock(item, cartItem)) {
-                throw new InsufficientStockException();
-            }
+            throwExceptionIfInsufficientStock(item, cartItem);
             cartItemList.add(cartItem);
         } else {
             existingCartItem.setQuantity(existingCartItem.getQuantity() + quantity);
-            if (!isQuantityIsInStock(item, existingCartItem)) {
-                throw new InsufficientStockException();
-            }
+            throwExceptionIfInsufficientStock(item, existingCartItem);
             existingCartItem.setTotalPrice();
         }
-
 
         cart.setCartItemList(cartItemList);
         cartRepository.save(cart);
         return cart;
     }
 
-    private boolean isQuantityIsInStock(Item item, CartItem existingCartItem) {
-        return existingCartItem.getQuantity() <= item.getStockQuantity();
+    private void throwExceptionIfInsufficientStock(Item item, CartItem existingCartItem) {
+        if (!(existingCartItem.getQuantity() <= item.getStockQuantity())) {
+            throw new InsufficientStockException();
+        }
     }
 
     @Transactional
