@@ -47,7 +47,6 @@ public class CartService {
         return cart;
     }
 
-    @Transactional
     public Cart deleteItemFromCart(Long cartId, Long itemId) {
         Cart cart = findCartById(cartId);
         List<CartItem> cartItemList = cart.getCartItemList();
@@ -59,7 +58,6 @@ public class CartService {
         return cartRepository.save(cart);
     }
 
-    @Transactional
     public Cart deleteAllItemsFromCart(Long cartId) {
         Cart cart = findCartById(cartId);
         cart.getCartItemList().clear();
@@ -72,7 +70,7 @@ public class CartService {
                 return cartItem;
             }
         }
-        throw new NotFoundException("Unable to find item in cart.");
+        throw new NotFoundException("Item doesn't exist in the cart.");
     }
 
     private CartItem getCartItemByItem(Item item, List<CartItem> cartItemList) {
