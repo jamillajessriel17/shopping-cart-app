@@ -65,7 +65,6 @@ public class CartService {
         return cartRepository.save(cart);
     }
 
-
     @Transactional
     public Cart deleteAllItemsFromCart(Long cartId) {
         Cart cart = findCartById(cartId);
