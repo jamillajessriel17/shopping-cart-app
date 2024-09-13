@@ -24,6 +24,6 @@ public class ItemController {
     @GetMapping("")
     public ResponseEntity<List<Item>> getAllItems() {
         List<Item> savedItem = itemService.getAllItems();
-        return new ResponseEntity<>(savedItem, HttpStatus.CREATED);
+        return new ResponseEntity<>(savedItem, HttpStatus.OK);
     }
 }

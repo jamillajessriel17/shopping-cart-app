@@ -29,12 +29,12 @@ public class CartController {
     @DeleteMapping("delete/{cartId}")
     public ResponseEntity<Cart> deleteItemFromCart(@PathVariable Long cartId, @RequestParam Long itemId) {
         Cart cart = cartService.deleteItemFromCart(cartId, itemId);
-        return new ResponseEntity<>(cart, HttpStatus.CREATED);
+        return new ResponseEntity<>(cart, HttpStatus.OK);
     }
 
     @DeleteMapping("deleteAll/{cartId}")
     public ResponseEntity<Cart> deleteAllItemsFromCart(@PathVariable Long cartId) {
         Cart cart = cartService.deleteAllItemsFromCart(cartId);
-        return new ResponseEntity<>(cart, HttpStatus.CREATED);
+        return new ResponseEntity<>(cart, HttpStatus.OK);
     }
 }
