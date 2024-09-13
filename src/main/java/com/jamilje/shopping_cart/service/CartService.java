@@ -47,12 +47,6 @@ public class CartService {
         return cart;
     }
 
-    private void throwExceptionIfInsufficientStock(Item item, CartItem existingCartItem) {
-        if (!(existingCartItem.getQuantity() <= item.getStockQuantity())) {
-            throw new InsufficientStockException();
-        }
-    }
-
     @Transactional
     public Cart deleteItemFromCart(Long cartId, Long itemId) {
         Cart cart = findCartById(cartId);
@@ -86,5 +80,11 @@ public class CartService {
                 .filter(cartItem -> Objects.equals(cartItem.getItem().getItemId(), item.getItemId()))
                 .findFirst()
                 .orElse(null);
+    }
+
+    private void throwExceptionIfInsufficientStock(Item item, CartItem existingCartItem) {
+        if (!(existingCartItem.getQuantity() <= item.getStockQuantity())) {
+            throw new InsufficientStockException();
+        }
     }
 }
