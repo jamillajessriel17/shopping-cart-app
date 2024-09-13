@@ -24,7 +24,6 @@ public class CartService {
         return cartRepository.findById(cartId)
                 .orElseThrow(() -> new NotFoundException("Cart not found"));
     }
-
     public Cart addItemToCart(Long cartId, Long itemId, Integer quantity) {
         Cart cart = findCartById(cartId);
         Item item = itemService.findById(itemId);
@@ -34,19 +33,18 @@ public class CartService {
 
         if (existingCartItem == null) {
             CartItem cartItem = CartItemBuilder.buildCartItem(cart, item, quantity);
-            cartItemList.add(CartItemBuilder.buildCartItem(cart, item, quantity));
             if (!isQuantityIsInStock(item, cartItem)) {
                 throw new InsufficientStockException();
             }
+            cartItemList.add(cartItem);
         } else {
             existingCartItem.setQuantity(existingCartItem.getQuantity() + quantity);
-
-            if (isQuantityIsInStock(item, existingCartItem)) {
-                existingCartItem.setTotalPrice();
-            } else {
+            if (!isQuantityIsInStock(item, existingCartItem)) {
                 throw new InsufficientStockException();
             }
+            existingCartItem.setTotalPrice();
         }
+
 
         cart.setCartItemList(cartItemList);
         cartRepository.save(cart);
