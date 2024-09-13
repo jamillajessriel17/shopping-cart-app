@@ -1,7 +1,8 @@
 CREATE TABLE ITEM (
     item_id BIGINT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
-    price DECIMAL(19, 2) NOT NULL
+    price DECIMAL(19, 2) NOT NULL,
+    stock_quantity INT DEFAULT 0
 );
 
 CREATE TABLE CART (

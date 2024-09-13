@@ -20,4 +20,5 @@ public class Item {
     private Long itemId;
     private String name;
     private BigDecimal price;
+    private Integer stockQuantity;
 }

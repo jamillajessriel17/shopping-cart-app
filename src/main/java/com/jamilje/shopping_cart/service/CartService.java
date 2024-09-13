@@ -3,6 +3,7 @@ package com.jamilje.shopping_cart.service;
 import com.jamilje.shopping_cart.entity.Cart;
 import com.jamilje.shopping_cart.entity.CartItem;
 import com.jamilje.shopping_cart.entity.Item;
+import com.jamilje.shopping_cart.exception.InsufficientStockException;
 import com.jamilje.shopping_cart.exception.NotFoundException;
 import com.jamilje.shopping_cart.mapper.CartItemBuilder;
 import com.jamilje.shopping_cart.repository.CartRepository;
@@ -32,16 +33,28 @@ public class CartService {
         CartItem existingCartItem = getCartItemByItem(item, cartItemList);
 
         if (existingCartItem == null) {
+            CartItem cartItem = CartItemBuilder.buildCartItem(cart, item, quantity);
             cartItemList.add(CartItemBuilder.buildCartItem(cart, item, quantity));
+            if (!isQuantityIsInStock(item, cartItem)) {
+                throw new InsufficientStockException();
+            }
         } else {
             existingCartItem.setQuantity(existingCartItem.getQuantity() + quantity);
-            existingCartItem.setTotalPrice();
+
+            if (isQuantityIsInStock(item, existingCartItem)) {
+                existingCartItem.setTotalPrice();
+            } else {
+                throw new InsufficientStockException();
+            }
         }
 
         cart.setCartItemList(cartItemList);
-
         cartRepository.save(cart);
         return cart;
+    }
+
+    private boolean isQuantityIsInStock(Item item, CartItem existingCartItem) {
+        return existingCartItem.getQuantity() <= item.getStockQuantity();
     }
 
     @Transactional
