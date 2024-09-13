@@ -24,7 +24,6 @@ public class CartItem {
     private Item item;
     private Integer quantity;
     private BigDecimal totalPrice;
-
     @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "cart_id")
